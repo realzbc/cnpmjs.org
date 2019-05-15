@@ -1,5 +1,7 @@
 'use strict';
 
+var scopeAuth = require('../middleware/scope_auth');
+
 var showPackage = require('../controllers/web/package/show');
 var searchPackage = require('../controllers/web/package/search');
 var searchRange = require('../controllers/web/package/search_range');
@@ -42,6 +44,8 @@ function routes(app) {
 
   app.get(/^\/badge\/v\/([@\w\-\.\/]+)\.svg$/, badge.version);
   app.get(/^\/badge\/d\/([@\w\-\.\/]+)\.svg$/, badge.downloads);
+
+  app.post('/scope/validate/', scopeAuth);
 }
 
 module.exports = routes;

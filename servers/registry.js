@@ -23,6 +23,7 @@ var maxrequests = require('koa-maxrequests');
 var proxy = require('koa-proxy');
 app.use(proxy({
   host:  'https://registry.npmjs.org',
+  //macth pattern '/-/npm/v1/security/audits'
   match: /^\/\-\/npm\/v1\/security\/audits/
 }));
 
