@@ -27,6 +27,8 @@ module.exports = {
   Total: load('total'),
   DownloadTotal: load('download_total'),
 
+  Scope: load('scope'),
+
   query: function* (sql, args) {
     var options = { replacements: args };
     var data = yield this.sequelize.query(sql, options);

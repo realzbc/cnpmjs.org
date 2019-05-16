@@ -11,6 +11,7 @@ var showUser = require('../controllers/web/user/show');
 var sync = require('../controllers/sync');
 var showTotal = require('../controllers/total');
 var badge = require('../controllers/web/badge');
+var scope = require('../controllers/web/scope/scope');
 
 function routes(app) {
   app.get('/total', showTotal);
@@ -45,7 +46,10 @@ function routes(app) {
   app.get(/^\/badge\/v\/([@\w\-\.\/]+)\.svg$/, badge.version);
   app.get(/^\/badge\/d\/([@\w\-\.\/]+)\.svg$/, badge.downloads);
 
-  app.post('/scope/validate/', scopeAuth);
+  app.post('/scope/check/', scopeAuth, scope.scopeCheck);
+  app.post('/scope/save/', scopeAuth, scope.saveScope);
+  app.post('/scope/get/', scopeAuth, scope.get);
+  app.post('/scope/del/', scopeAuth, scope.del);
 }
 
 module.exports = routes;

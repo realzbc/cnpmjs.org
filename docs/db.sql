@@ -318,3 +318,18 @@ CREATE TABLE IF NOT EXISTS `dist_file` (
 -- ALTER TABLE `dist_file`
 --   CHANGE `name` `name` varchar(214) NOT NULL COMMENT 'file name',
 --   CHANGE `parent` `parent` varchar(214) NOT NULL COMMENT 'parent dir' DEFAULT '/';
+
+
+CREATE TABLE IF NOT EXISTS `scope` (
+ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'primary key',
+ `gmt_create` datetime NOT NULL COMMENT 'create time',
+ `gmt_modified` datetime NOT NULL COMMENT 'modified time',
+ `name` varchar(214) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'scope name',
+ `admin` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'scope admin',
+ `user` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'username',
+ `description` longtext COMMENT 'scope description',
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `uk_scope_name_user` (`name`,`user`),
+ KEY `idx_name` (`name`),
+ KEY `idx_user` (`user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='scope';

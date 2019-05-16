@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "agentkeepalive": "^4.0.0",
+    "async-validator": "^1.11.2",
     "await-event": "^2.1.0",
     "bytes": "^2.5.0",
     "cfork": "^1.6.1",
