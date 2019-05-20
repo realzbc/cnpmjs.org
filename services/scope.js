@@ -58,3 +58,8 @@ exports.ensureUserExist = function* (email) {
 exports.deleteScope = function* (name) {
   yield Scope.removeScope(name);
 };
+
+exports.getAllScopes = function* () {
+  var sql = 'SELECT DISTINCT(name) FROM scope';
+  return yield models.query(sql);
+};
