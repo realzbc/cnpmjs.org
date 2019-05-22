@@ -12,6 +12,18 @@ exports.listUserScopes = function* (user) {
   });
 };
 
+exports.listAdminScopes = function* (admin) {
+  var rows = yield this.findAll({
+    attributrs: ['name'],
+    where: {
+      admin: admin
+    }
+  });
+  return rows.map(function (row) {
+    return row.name;
+  });
+};
+
 exports.addScopeWithSingleUser = function* (name, user, admin) {
   var row = yield this.find({
     where: {

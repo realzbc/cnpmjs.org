@@ -14,21 +14,14 @@ exports.scopeCheck = function* (next) {
     };
   }
 
-  if (common.isPrivateScopedPackage(name)) {
-    this.status = 403;
-    return this.body = {
-      message: '与全局scopes列表冲突, ip: ' + this.ip
-    };
-  }
-
-  var res = yield scopeService.getScopeByName(name);
-
-  if (res) {
+  var isPrivate = yield common.isPrivateScopedPackage(name);
+  if (isPrivate) {
     this.status = 403;
     return this.body = {
       message: name + ' 已被占用，试试别的名字吧'
     };
   }
+  
   this.body = {
     message: 'success',
     name: name

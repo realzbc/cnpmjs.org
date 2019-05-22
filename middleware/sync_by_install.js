@@ -13,7 +13,7 @@
  */
 
 var config = require('../config');
-
+var common = require('../lib/common');
 /**
  * {Boolean} this.allowSync  -  allow sync triggle by cnpm install
  */
@@ -38,11 +38,9 @@ module.exports = function* syncByInstall(next) {
   var name = this.params.name || this.params[0];
 
   // private scoped package don't sync
-  if (name && name[0] === '@') {
-    var scope = name.split('/')[0];
-    if (config.scopes.indexOf(scope) >= 0) {
-      return yield next;
-    }
+  var isPrivate = yield common.isPrivateScopedPackage(name);
+  if (name && isPrivate) {
+    return yield next;
   }
 
   this.allowSync = true;

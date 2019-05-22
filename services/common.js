@@ -5,8 +5,9 @@ var isPrivateScopedPackage = require('../lib/common').isPrivateScopedPackage;
 
 config.privatePackages = config.privatePackages || [];
 
-exports.isPrivatePackage = function (name) {
-  if (isPrivateScopedPackage(name)) {
+exports.isPrivatePackage = function* (name) {
+  var isPrivate = yield isPrivateScopedPackage(name);
+  if (isPrivate) {
     return true;
   }
   if (config.privatePackages.indexOf(name) >= 0) {

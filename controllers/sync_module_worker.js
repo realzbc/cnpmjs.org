@@ -331,7 +331,8 @@ SyncModuleWorker.prototype.syncByName = function* (concurrencyId, name, registry
   this.log('----------------- Syncing %s -------------------', name);
 
   // ignore private scoped package
-  if (common.isPrivateScopedPackage(name)) {
+  var isPrivate = yield common.isPrivateScopedPackage(name);
+  if (isPrivate) {
     this.log('[c#%d] [%s] ignore sync private scoped %j package',
       concurrencyId, name, config.scopes);
     yield this._doneOne(concurrencyId, name, true);

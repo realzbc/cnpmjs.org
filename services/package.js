@@ -228,11 +228,23 @@ exports.listPublicModuleNamesSince = function* listPublicModuleNamesSince(start)
 exports.listAllPublicModuleNames = function* () {
   var sql = 'SELECT DISTINCT(name) AS name FROM tag ORDER BY name';
   var rows = yield models.query(sql);
-  return rows.filter(function (row) {
-    return !common.isPrivatePackage(row.name);
+  var tasks = [];
+  rows.forEach(row=>tasks.push(exports.isPrivatePkg(row.name)));
+  var res = yield tasks;
+
+  return res.filter(function (row) {
+    return !row.isPrivate
   }).map(function (row) {
     return row.name;
   });
+};
+
+exports.isPrivatePkg = function* (name) {
+  var isPrivatePkgVal = yield common.isPrivatePackage(name);
+  return {
+    name: name,
+    isPrivate: isPrivatePkgVal
+  }
 };
 
 exports.listModulesByName = function* (moduleName, attributes) {
@@ -644,7 +656,8 @@ exports.updatePrivateModuleMaintainers = function* (name, usernames) {
 };
 
 function* getMaintainerModel(name) {
-  return common.isPrivatePackage(name) ? PrivateModuleMaintainer : NpmModuleMaintainer;
+  var isPrivate = yield common.isPrivatePackage(name);
+  return isPrivate ? PrivateModuleMaintainer : NpmModuleMaintainer;
 }
 
 exports.listMaintainers = function* (name) {
