@@ -54,7 +54,7 @@ function checkScope(name, ctx) {
   }
 
   var scope = name.split('/')[0];
-  if (ctx.user.scopes.indexOf(scope) === -1) {
+  if (ctx.user.scopes.indexOf(scope) === -1 || ctx.user.admin_scopes.indexOf(scope) === -1) {
     debug('assert scope  %s error', name);
     ctx.status = 400;
     const error = util.format('[invalid] scope %s not match legal scopes: %s', scope, ctx.user.scopes.join(', '));

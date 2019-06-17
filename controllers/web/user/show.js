@@ -2,6 +2,7 @@
 
 var config = require('../../../config');
 var packageService = require('../../../services/package');
+var scopeService = require('../../../services/scope');
 var userService = require('../../../services/user');
 var common = require('../../../lib/common');
 var he = require('he');
@@ -9,7 +10,9 @@ var he = require('he');
 module.exports = function* showUser(next) {
   var name = this.params.name;
   var isAdmin = common.isAdmin(name);
-  var scopes = config.scopes || [];
+  var userScopes = (yield scopeService.getScopesByUser(name)) || [];
+  var adminScopes = (yield scopeService.getScopesByAdmin(name)) || [];
+  var scopes = [...userScopes, ...adminScopes] || [];//config.scopes || [];
   var user;
   var r = yield [packageService.listModulesByUser(name), userService.getAndSave(name)];
   var packages = r[0];

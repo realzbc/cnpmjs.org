@@ -3,6 +3,7 @@
 var gravatar = require('gravatar');
 // var User = require('../proxy/user');
 var User = require('../models').User;
+var Scope = require('../models').Scope;
 var isAdmin = require('../lib/common').isAdmin;
 var config = require('../config');
 
@@ -20,7 +21,9 @@ var config = require('../config');
 
 module.exports = DefaultUserService;
 
-function convertToUser(row) {
+function* convertToUser(row) {
+  var scopes = yield Scope.listUserScopes(row.name);
+  var adminScopes = yield Scope.listAdminScopes(row.name);
   var user = {
     login: row.name,
     email: row.email,
@@ -29,7 +32,8 @@ function convertToUser(row) {
     avatar_url: '',
     im_url: '',
     site_admin: isAdmin(row.name),
-    scopes: config.scopes,
+    scopes: isAdmin(row.name)?[...config.scopes, ...scopes] : [...scopes],//config.scopes,
+    admin_scopes: adminScopes
   };
   if (row.json) {
     var data = row.json;
@@ -73,7 +77,7 @@ proto.auth = function* (login, password) {
   if (!row) {
     return null;
   }
-  return convertToUser(row);
+  return yield convertToUser(row);
 };
 
 /**
@@ -86,7 +90,7 @@ proto.get = function* (login) {
   if (!row) {
     return null;
   }
-  return convertToUser(row);
+  return yield convertToUser(row);
 };
 
 /**
@@ -96,11 +100,12 @@ proto.get = function* (login) {
  */
 proto.list = function* (logins) {
   var rows = yield User.listByNames(logins);
-  var users = [];
+  //var users = [];
+  var tasks = [];
   rows.forEach(function (row) {
-    users.push(convertToUser(row));
+    tasks.push(convertToUser(row));
   });
-  return users;
+  return yield tasks;
 };
 
 /**
@@ -118,9 +123,10 @@ proto.search = function* (query, options) {
   }
 
   var rows = yield User.search(query, options);
-  var users = [];
+  //var users = [];
+  var tasks = [];
   rows.forEach(function (row) {
-    users.push(convertToUser(row));
+    tasks.push(convertToUser(row));
   });
-  return users;
+  return yield tasks;
 };

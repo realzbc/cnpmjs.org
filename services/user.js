@@ -2,6 +2,7 @@
 
 var config = require('../config');
 var User = require('../models').User;
+var isAdmin = require('../lib/common').isAdmin;
 
 if (!config.userService) {
   var DefaultUserService = require('./default_user_service');
@@ -17,7 +18,7 @@ function convertUser(user) {
     return null;
   }
   user.scopes = user.scopes || [];
-  if (user.scopes.length === 0 && config.scopes.length > 0) {
+  if (user.scopes.length === 0 && config.scopes.length > 0 && isAdmin(user.name)) {
     user.scopes = config.scopes.slice();
   }
   return user;

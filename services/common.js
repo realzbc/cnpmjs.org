@@ -1,12 +1,12 @@
 'use strict';
 
 var config = require('../config');
-var isPrivateScopedPackage = require('../lib/common').isPrivateScopedPackage;
+var common = require('../lib/common');
 
 config.privatePackages = config.privatePackages || [];
 
 exports.isPrivatePackage = function* (name) {
-  var isPrivate = yield isPrivateScopedPackage(name);
+  var isPrivate = yield common.isPrivateScopedPackage(name);
   if (isPrivate) {
     return true;
   }

@@ -3,7 +3,7 @@ var utility = require('utility');
 var models = require('../models');
 var common = require('./common');
 var config = require('../config');
-var getUserInfoByEmail = require('../lib/common').getUserInfoByEmail;
+var libCommon = require('../lib/common');
 
 var User = models.User;
 var Scope = models.Scope;
@@ -36,7 +36,7 @@ exports.saveScope = function* (name, admin, users) {
 };
 
 exports.ensureUserExist = function* (email) {
-  var info = getUserInfoByEmail(email);
+  var info = libCommon.getUserInfoByEmail(email);
 
   var userGetted = yield User.findByName(info.name);
 
@@ -62,4 +62,24 @@ exports.deleteScope = function* (name) {
 exports.getAllScopes = function* () {
   var sql = 'SELECT DISTINCT(name) FROM scope';
   return yield models.query(sql);
+};
+
+exports.getScopesByUser = function* (username) {
+  var list = yield Scope.listUserScopes(username);
+
+  if (!list || list.length === 0) {
+    return null;
+  }
+
+  return list;
+};
+
+exports.getScopesByAdmin = function* (adminname) {
+  var list = yield Scope.listAdminScopes(adminname);
+
+  if (!list || list.length === 0) {
+    return null;
+  }
+
+  return list;
 };

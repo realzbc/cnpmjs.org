@@ -46,6 +46,7 @@ module.exports = function () {
     this.user.name = row.login;
     this.user.isAdmin = row.site_admin;
     this.user.scopes = row.scopes;
+    this.user.admin_scopes = row.admin_scopes;
     debug('auth pass user: %j, headers: %j', this.user, this.header);
     yield next;
   };

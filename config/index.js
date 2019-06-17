@@ -74,6 +74,7 @@ var config = {
     fengmk2: 'fengmk2@gmail.com',
     admin: 'admin@cnpmjs.org',
     dead_horse: 'dead_horse@qq.com',
+    bizfe: 'bizfe@sogou-inc.com',
   },
 
   // email notification for errors

@@ -10,6 +10,11 @@ module.exports = function* editable(next) {
     if (this.user.isAdmin) {
       return yield next;
     }
+    //detect user admin_scope 
+    var scopeName = moduleName.split('/')[0];
+    if(this.user.admin_scopes.indexOf(scopeName) >= 0) {
+      return yield next;
+    }
     var isMaintainer = yield packageService.isMaintainer(moduleName, username);
     if (isMaintainer) {
       return yield next;
